@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import * as Location from 'expo-location';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Fontisto } from '@expo/vector-icons';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 //Open Weather API Key
@@ -81,9 +81,13 @@ export default function App() {
                   }}
                 />
               </View>
-              <Text style={styles.temp}>
-                {parseFloat(day.main.temp).toFixed(1)}
-              </Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.temp}>
+                  {parseFloat(day.main.temp).toFixed(1)}
+                </Text>
+                <Fontisto name="apple" size={24} color="white" />{' '}
+              </View>
+
               <Text style={styles.dt_txt}>{day.dt_txt}</Text>
               <Text style={styles.description}>{day.weather[0].main}</Text>
               <Text style={styles.tinyText}>{day.weather[0].description}</Text>
@@ -113,28 +117,35 @@ const styles = StyleSheet.create({
   weather: {},
   day: {
     width: SCREEN_WIDTH,
-    alignItems: 'center',
   },
   temp: {
-    fontSize: 158,
+    fontSize: 118,
     color: 'white',
+    alignItems: 'flex-start',
+    paddingLeft: 20,
   },
   description: {
     marginTop: 20,
     fontSize: 60,
     color: 'white',
+    alignItems: 'flex-start',
+    paddingLeft: 20,
   },
   tinyText: {
     fontSize: 20,
     color: 'white',
+    alignItems: 'flex-start',
+    paddingLeft: 20,
   },
   dt_txt: {
     fontSize: 30,
     color: 'white',
+    alignItems: 'flex-start',
+    paddingLeft: 20,
   },
   icon: {
     width: 150,
     height: 150,
   },
-  iconBox: {},
+  iconBox: { alignItems: 'center' },
 });
