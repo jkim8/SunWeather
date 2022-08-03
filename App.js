@@ -7,10 +7,13 @@ import {
   Text,
   View,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import * as Location from 'expo-location';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+//Open Weather API Key
 const API_KEY = '8cf3f6bfe97981c97bfdc23aefac23e1';
 
 export default function App() {
@@ -18,13 +21,16 @@ export default function App() {
   const [days, setDays] = useState([]);
   const [ok, setOk] = useState(true);
   const getWeather = async () => {
+    //폰의 위치 정보 받아오기위한 permission
     const { granted } = await Location.requestForegroundPermissionsAsync();
     if (!granted) {
       setOk(false);
     }
+    //현재 위도 경도 받아오기
     const {
       coords: { latitude, longitude },
-    } = await Location.getCurrentPositionAsync({ accuracy: 5 });
+    } = await Location.getCurrentPositionAsync({ accuracy: 5 }); // 숫자가 높을 수록 정확도가 올라감
+    //현재 지역 정보 받아오기 (Geocode 쓰면 반대로 도시정보로 위도 경도 받아옴)
     const location = await Location.reverseGeocodeAsync(
       {
         latitude,
@@ -33,6 +39,7 @@ export default function App() {
       { useGoogleMaps: false },
     );
     setCity(location[0].city);
+    //Open Weather API:  5일간 3시간 텀으로 날씨 정보 받아오는 API
     const response = await fetch(
       `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=imperial`,
     );
@@ -66,10 +73,18 @@ export default function App() {
         ) : (
           days.map((day, index) => (
             <View key={index} style={styles.day}>
+              <View style={styles.iconBox}>
+                <Image //Weather API 에서 제공하는 이미지 변수 설정 후 보여주기
+                  style={styles.icon}
+                  source={{
+                    uri: `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
+                  }}
+                />
+              </View>
               <Text style={styles.temp}>
                 {parseFloat(day.main.temp).toFixed(1)}
               </Text>
-              <Text style={styles.description}>{day.weather[0].icon}</Text>
+              <Text style={styles.dt_txt}>{day.dt_txt}</Text>
               <Text style={styles.description}>{day.weather[0].main}</Text>
               <Text style={styles.tinyText}>{day.weather[0].description}</Text>
             </View>
@@ -86,7 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'teal',
   },
   city: {
-    flex: 1.2,
+    flex: 1.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -101,12 +116,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   temp: {
-    marginTop: 50,
     fontSize: 158,
     color: 'white',
   },
   description: {
-    marginTop: -20,
+    marginTop: 20,
     fontSize: 60,
     color: 'white',
   },
@@ -114,4 +128,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
   },
+  dt_txt: {
+    fontSize: 30,
+    color: 'white',
+  },
+  icon: {
+    width: 150,
+    height: 150,
+  },
+  iconBox: {},
 });
