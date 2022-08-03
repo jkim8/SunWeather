@@ -85,7 +85,7 @@ export default function App() {
                 <Text style={styles.temp}>
                   {parseFloat(day.main.temp).toFixed(1)}
                 </Text>
-                <Fontisto name="apple" size={24} color="white" />{' '}
+                <Fontisto name="apple" size={24} color="white" />
               </View>
 
               <Text style={styles.dt_txt}>{day.dt_txt}</Text>
